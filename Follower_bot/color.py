@@ -3,8 +3,8 @@ import numpy as np
 import imutils 
 # This drives the program into an infinite loop. 
 def blue(img): 
-    lower_blue = np.array([160,0,0]) 
-    upper_blue = np.array([255,200,100]) 
+    lower_blue = np.array([0,0,0]) 
+    upper_blue = np.array([255,40,40]) 
     img = cv2.resize(img,(400,300)) 
     mask = cv2.inRange(img, lower_blue, upper_blue) 
     res = cv2.bitwise_and(img,img, mask= mask) 
@@ -25,7 +25,7 @@ def blue(img):
     except:
         return 0       
 
-img = cv2.imread('img.png')
+img = cv2.imread('bot3.png')
 px_dist = blue(img)
 print(px_dist)
 cv2.waitKey(0) & 0xFF 
