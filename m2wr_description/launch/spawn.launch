@@ -19,6 +19,8 @@
 </include>
     <param name="robot_description" command="$(find xacro)/xacro.py '$(find m2wr_description)/urdf/m2wr.xacro'" />
 
+<param name="robot_description" command="$(find xacro)/xacro.py '$(find m2wr_description)/urdf/follow.xacro'" />
+
 
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
