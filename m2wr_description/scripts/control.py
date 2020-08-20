@@ -46,7 +46,7 @@ while not rospy.is_shutdown():
 		print(angle_to_goal)
 		print(theta)
 		speed.linear.x = 0.0
-		speed.angular.z = 0.3
+		speed.angular.z = 0.9
 
 	else :
 

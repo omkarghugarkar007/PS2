@@ -122,7 +122,7 @@
     <pose>0 0 0.1 0 0 0</pose>
     
     <inertial>
-      <mass value="0.5"/>
+      <mass value="0.1"/>
       <origin rpy="0 0 0" xyz="0 0 0.1"/>
       <inertia ixx="0.00395416666667" ixy="0" ixz="0" iyy="0.0106208333333" iyz="0" izz="0.0106208333333"/>
     </inertial>
@@ -313,12 +313,12 @@
   <gazebo reference="camera">
     <material>Gazebo/Green</material>
     <sensor type="camera" name="camera1">
-      <update_rate>30.0</update_rate>
+      <update_rate>10.0</update_rate>
       <camera name="head">
         <horizontal_fov>1.3962634</horizontal_fov>
         <image>
-          <width>800</width>
-          <height>800</height>
+          <width>400</width>
+          <height>400</height>
           <format>R8G8B8</format>
         </image>
         <clip>

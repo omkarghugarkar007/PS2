@@ -101,27 +101,8 @@ if __name__ == '__main__':
 	command = Twist()
 
 	print("1")
-	#rotate(target =30)
-	print("2")
-	move(distance=10)
+	rotate(target =-90)
 	
-	print("3")
-	
-	rotate(target=10)
-	print("4")
-	
-	move(distance=5)
-	print("5")
-
-	rotate(target=90)
-	print("5")
-	
-	move(distance=1)
-	print("6")
-	rotate(target=-90)
-	print("7")
-	move(distance=30)
-
 	
 
 
