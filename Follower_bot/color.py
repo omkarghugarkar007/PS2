@@ -25,7 +25,10 @@ def blue(img):
     except:
         return 0       
 
-img = cv2.imread('bot3.png')
+img = cv2.imread('bot1.png')
 px_dist = blue(img)
+wide_angle = 180
+angle = (px_dist*wide_angle)/400 
 print(px_dist)
+print(angle)
 cv2.waitKey(0) & 0xFF 
