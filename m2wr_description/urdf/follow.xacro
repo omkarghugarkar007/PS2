@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<robot name="m2wr" xmlns:xacro="https://www.ros.org/wiki/xacro" >
+<robot name="follow" xmlns:xacro="https://www.ros.org/wiki/xacro" >
   <xacro:property name="cameraSize" value="0.05"/>
   <xacro:property name="cameraMass" value="0.1"/>
     

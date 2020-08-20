@@ -19,8 +19,8 @@ yaw_ = 0
 state_ = 0
 # goal
 desired_position_ = Point()
-desired_position_.x = rospy.get_param('des_pos_x')
-desired_position_.y = rospy.get_param('des_pos_y')
+desired_position_.x = 8
+desired_position_.y = 8
 desired_position_.z = 0
 # parameters
 yaw_precision_ = math.pi / 90 # +/- 2 degree allowed
@@ -113,6 +113,7 @@ def main():
     global pub, active_
     
     rospy.init_node('go_to_point')
+    print("Hello")
     
     pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
     

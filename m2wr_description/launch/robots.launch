@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-<!--param name="robot_description"
-    command="$(find xacro)/xacro '$(find m2wr_description)/urdf/follow.xacro'" /-->
+
 <!-- BEGIN ROBOT 1-->
   <group ns="robot1">
-  <param name="robot_description"
+  <param name="robot_description_1"
     command="$(find xacro)/xacro '$(find m2wr_description)/urdf/follow.xacro'" />
     <param name="tf_prefix" value="robot1_tf" />
     <include file="$(find m2wr_description)/launch/two.launch" >
@@ -15,7 +14,7 @@
 
   <!-- BEGIN ROBOT 2-->
   <group ns="robot2">
-  <param name="robot_description"
+  <param name="robot_description_2"
     command="$(find xacro)/xacro '$(find m2wr_description)/urdf/m2wr.xacro'" />
     <param name="tf_prefix" value="robot2_tf" />
     <include file="$(find m2wr_description)/launch/two.launch" >

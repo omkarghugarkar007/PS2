@@ -24,13 +24,13 @@
 
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
-    <arg name="z" default="0.5"/>
+    <arg name="z" default="0"/>
 
     <node name="first_mybot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
           args="-urdf -param second_robot_description -model m2wr -x $(arg x) -y $(arg y) -z $(arg z)" />
 
     <node name="second_mybot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
-          args="-urdf -param first_robot_description -model m2wr -x $(arg x) -y $(arg y) -z $(arg z)" />
+          args="-urdf -param first_robot_description -model follow -x $(arg x) -y $(arg y) -z $(arg z)" />
 
 
 </launch>
