@@ -76,6 +76,7 @@ def rotate(target):
 		target_rad = target*math.pi/180
 		diff = abs(target_rad-yaw) 
 		command.angular.z =0.5
+		print(diff)
 		pub.publish(command)
 		if diff <0.1:
 			print("Rotation Complete")
@@ -96,7 +97,7 @@ if __name__ == '__main__':
 
 	rospy.init_node('rotate_robot')
 	sub = rospy.Subscriber('/odom',Odometry,get_rotation)
-	pub = rospy.Publisher('/cmd_vel', Twist,queue_size = 1)
+	pub = rospy.Publisher('/cmd_vel1', Twist,queue_size = 1)
 	r = rospy.Rate(10)
 	command = Twist()
 

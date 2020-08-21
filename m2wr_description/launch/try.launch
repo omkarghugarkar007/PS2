@@ -24,7 +24,7 @@
 
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
-    <arg name="z" default="0"/>
+    <arg name="z" default="0.5"/>
 
     <node name="first_mybot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
           args="-urdf -param second_robot_description -model m2wr -x $(arg x) -y $(arg y) -z $(arg z)" />

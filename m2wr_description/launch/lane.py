@@ -1,24 +1,11 @@
-#!/usr/bin/env python
 
 import numpy as np
+import cv2
 import time
 from numpy import ones,vstack
 from numpy.linalg import lstsq
 from statistics import mean
 import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib import pyplot as plt
-import cv2
-from cv_bridge import CvBridge
-import rospy
-from sensor_msgs.msg import Image
-import rospy
-from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Point,Twist
-from tf.transformations import euler_from_quaternion, quaternion_from_euler
-from math import atan2
-
-print("2")
 
 def roi(img, vertices):
     
@@ -134,7 +121,6 @@ def process_img(image):
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
     #                                     rho   theta   thresh  min length, max gap:        
     lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 180,      40,       25)
-    
     m1 = 0
     m2 = 0
     try:
@@ -142,6 +128,7 @@ def process_img(image):
         cv2.line(original_image, (l1[0], l1[1]), (l1[2], l1[3]), [0,255,0], 10)
         cv2.line(original_image, (l2[0], l2[1]), (l2[2], l2[3]), [0,255,0], 10)
         # pixel 30width
+        print(l1[0])
     except Exception as e:
         print(str(e))
         pass
@@ -157,49 +144,20 @@ def process_img(image):
     except Exception as e:
         pass
 
-    try:
+    return processed_img,original_image, m1, m2
+#rec = cv2.VideoCapture(0)   # rec ~ record
 
-        return processed_img,original_image, m1, m2, l1[0],l1[2],l2[0],l2[2]
-
-    except:
-
-        return processed_img,original_image, m1, m2, 0,0,400,400
-
-def move(mid):
-
-    no_of_pixels = 400
-
-    diff = no_of_pixels/2 - 200
-
-    if diff < 180:
-        speed.linear.x = 0.0
-        speed.angular.z = diff *(0.5)
-
-    elif diff > 220:
-        speed.linear.x = 0.0
-        speed.angular.z = diff *(-0.5)
-
-    else:
-        speed.linear.x = 0.5
-        speed.angular.z = 0.0
-
-def detect(data):
-    
-    bridge = CvBridge()
-    image = bridge.imgmsg_to_cv2(data, "bgr8")
-    print("3")
-    cv2.imshow("Image",image)
-    newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(image)
-    mid = (x1 + x2 + x3 +x4)/4
-    print(mid)
-    move(mid)
-    cv2.imshow("Image2",original_image)
-    k = cv2.waitKey(5) & 0xFF
-
-if __name__ == '__main__':
-	rospy.init_node('image_gazebo', anonymous=True)
-	rospy.Subscriber("/mybot/camera1/image_raw", Image, detect)
-    pub = rospy.Publisher("/cmd_vel",Twist,queue_size=1)
-    speed = Twist()
-    r = rospy.Rate(4)
-	rospy.spin()
+#while True:
+	#ret,image = rec.read()
+    #image = np.array(image, dtype=np.uint8)
+    #newimage,original_image, m1, m2 = process_img(image)
+    #if cv2.waitKey(1)==ord("q"):
+     #       break
+#rec.release()
+image = cv2.imread("/home/omkarghugarkar007/Pictures/1.png")
+image = np.array(image, dtype=np.uint8)
+newimage,original_image, m1, m2 = process_img(image)
+plt.imshow(original_image)
+#plt.imshow(newimage)
+plt.show()
+cv2.destroyAllWindows()
