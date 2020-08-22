@@ -18,7 +18,6 @@ from geometry_msgs.msg import Point,Twist
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from math import atan2
 
-print("2")
 
 def roi(img, vertices):
     
@@ -44,7 +43,8 @@ def draw_lanes(img, lines, color=[255, 0, 0], thickness=3):
             for ii in i:
                 ys += [ii[1],ii[3]]
         min_y = min(ys)
-        max_y = 600
+        max_y = 400
+        #600
         new_lines = []
         line_dict = {}
 
@@ -81,7 +81,7 @@ def draw_lanes(img, lines, color=[255, 0, 0], thickness=3):
 
                 for other_ms in final_lanes_copy:
 
-                    if not found_copy:
+                    if not found_copy: #1.2 and 0.8
                         if abs(other_ms*1.2) > abs(m) > abs(other_ms*0.8):
                             if abs(final_lanes_copy[other_ms][0][1]*1.2) > abs(b) > abs(final_lanes_copy[other_ms][0][1]*0.8):
                                 final_lanes[other_ms].append([m,b,line])
@@ -122,26 +122,29 @@ def process_img(image):
     original_image = image
     height = image.shape[0]
     width = image.shape[1]
-    vertices = np.array([[0, height],[width / 2, height / 2],[width, height]],np.int32)
+    #vertices = np.array([[0, height],[width / 2, height / 2],[width, height]],np.int32)
+    #vertices = np.array([[0,0],[0, height],[width, height],[width,0]],np.int32)
+    #vertices = np.array([[0,height/2],[0,0,height],[width,height],[width,height/2]],np.int32)
+    vertices = np.array([[0,(3*height)/4],[width / 2, height / 2],[width,(3*height)/4],[width,height],[0, height]],np.int32)
+    #vertices = np.array([[0,(5*height)/8],[width / 2, height / 2],[width,(5*height)/8],[width,height],[0, height]],np.int32)
+
     # convert to gray
     processed_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     # edge detection
-    processed_img =  cv2.Canny(processed_img, threshold1= 100, threshold2= 200)
-    #keep threshold 100,200
+    processed_img =  cv2.Canny(processed_img, threshold1= 60, threshold2= 250)
+    #keep threshold 100,200 or 50,220
     processed_img = cv2.GaussianBlur(processed_img,(5,5),0)
     processed_img = roi(processed_img, [vertices])
 
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
-    #                                     rho   theta   thresh  min length, max gap:        
-    lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 180,      40,       25)
-    print("Processing")
+    #                                     rho=1   theta   thresh  min length=40, max gap=25:        
+    lines = cv2.HoughLinesP(processed_img, 6, np.pi/180, 180,      30,       20)
     m1 = 0
     m2 = 0
     try:
         l1, l2, m1,m2 = draw_lanes(original_image,lines)
         cv2.line(original_image, (l1[0], l1[1]), (l1[2], l1[3]), [0,255,0], 10)
         cv2.line(original_image, (l2[0], l2[1]), (l2[2], l2[3]), [0,255,0], 10)
-	print("Found")
         # pixel 30width
     except Exception as e:
         print(str(e))
@@ -162,7 +165,7 @@ def process_img(image):
 
         return processed_img,original_image, m1, m2, l1[0],l1[2],l2[0],l2[2]
 
-    except:
+    except Exception as e:
 
         return processed_img,original_image, m1, m2, 0,0,400,400
 
