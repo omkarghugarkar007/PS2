@@ -188,7 +188,7 @@
 
  <!--   Joint for stick  -->
   <joint name="joint_stick" type="fixed">
-    <origin rpy="0 0 0" xyz="8.0 8.0 0.30"/>
+    <origin rpy="0 0 0" xyz="7.78 8 0.30"/>
     <child link="stick" />
     <parent link="link_chassis"/>
   </joint>  
@@ -304,7 +304,7 @@
 
   <joint name="camera_joint" type="fixed">
     <axis xyz="0.1 0 0.35" />
-    <origin xyz="8.02 8 0.45" rpy="0 0 0"/>
+    <origin xyz="7.8 8 0.45" rpy="0 0 0"/>
     <parent link="link_chassis"/>
     <child link="camera"/>
   </joint>
@@ -312,7 +312,7 @@
   <gazebo reference="camera">
     <material>Gazebo/Green</material>
     <sensor type="camera" name="camera1">
-      <update_rate>1</update_rate>
+      <update_rate>10</update_rate>
       <camera name="head">
         <horizontal_fov>1.3962634</horizontal_fov>
         <image>
@@ -330,7 +330,7 @@
       </camera>
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
-        <updateRate>1</updateRate>
+        <updateRate>0</updateRate>
         <cameraName>mybot/camera1</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>

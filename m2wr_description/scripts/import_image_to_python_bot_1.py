@@ -165,17 +165,25 @@ def process_img(image):
 
         return processed_img,original_image, m1, m2, 0,0,400,400
 
-def move(mid):
 
-    no_of_pixels = 400
+def detect(data):
+    
+    bridge = CvBridge()
+    image = bridge.imgmsg_to_cv2(data, "bgr8")
+    print("3")
+    #cv2.imshow("Image",image)
+    newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(image)
+    mid = (x1 + x2 + x3 +x4)/4
+    print(mid)
+   
+    print("In Move")
+    diff = mid -200
 
-    diff = no_of_pixels/2 - 200
-
-    if diff < 180:
+    if mid < 180:
         speed.linear.x = 0.0
         speed.angular.z = diff *(0.5)
 
-    elif diff > 220:
+    elif mid > 220:
         speed.linear.x = 0.0
         speed.angular.z = diff *(-0.5)
 
@@ -187,17 +195,7 @@ def move(mid):
 
     r.sleep()
 
-def detect(data):
-    
-    bridge = CvBridge()
-    image = bridge.imgmsg_to_cv2(data, "bgr8")
-    print("3")
-    cv2.imshow("Image",image)
-    newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(image)
-    mid = (x1 + x2 + x3 +x4)/4
-    print(mid)
-    move(mid)
-    #cv2.imshow("Image2",original_image)
+    cv2.imshow("Image2",original_image)
     k = cv2.waitKey(5) & 0xFF
 
 if __name__ == '__main__':

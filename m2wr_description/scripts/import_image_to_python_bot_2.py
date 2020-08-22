@@ -20,5 +20,5 @@ def detect(data):
 
 if __name__ == '__main__':
 	rospy.init_node('image_gazebo', anonymous=True)
-	rospy.Subscriber("/mybot/camera2/image_raw", Image, detect)
+	rospy.Subscriber("/mybot/camera1/image_raw", Image, detect)
 	rospy.spin()
