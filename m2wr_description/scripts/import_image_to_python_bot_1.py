@@ -183,6 +183,10 @@ def move(mid):
         speed.linear.x = 0.5
         speed.angular.z = 0.0
 
+    pub.publish(speed)
+
+    r.sleep()
+
 def detect(data):
     
     bridge = CvBridge()
@@ -193,13 +197,14 @@ def detect(data):
     mid = (x1 + x2 + x3 +x4)/4
     print(mid)
     move(mid)
-    cv2.imshow("Image2",original_image)
+    #cv2.imshow("Image2",original_image)
     k = cv2.waitKey(5) & 0xFF
 
 if __name__ == '__main__':
-	rospy.init_node('image_gazebo', anonymous=True)
-	rospy.Subscriber("/mybot/camera1/image_raw", Image, detect)
+
+    rospy.init_node('image_gazebo', anonymous=True)
+    rospy.Subscriber("/mybot/camera1/image_raw", Image, detect)
     pub = rospy.Publisher("/cmd_vel",Twist,queue_size=1)
     speed = Twist()
     r = rospy.Rate(4)
-	rospy.spin()
+    rospy.spin()
