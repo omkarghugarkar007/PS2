@@ -207,6 +207,7 @@ def detect(data):
 
     cv2.imshow("Image2",original_image)
     k = cv2.waitKey(5) & 0xFF
+    return linear_x,angular_z
 
 def clbk_laser(msg):
     regions = {
@@ -260,7 +261,7 @@ def take_action(regions):
     else:
         state_description = 'unknown case'
         rospy.loginfo(regions)
-
+    print("Done")
     rospy.loginfo(state_description)
     msg.linear.x = linear_x
     msg.angular.z = angular_z
