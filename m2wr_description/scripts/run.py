@@ -175,106 +175,128 @@ def process_img(image):
         
 def detect(data):
     
-    
-    bridge = CvBridge()
-    image = bridge.imgmsg_to_cv2(data, "bgr8")
-    print("3")
-    #cv2.imshow("Image",image)
-    #ret,thresh1 = cv2.threshold(image,127,255,cv2.THRESH_BINARY)
-    newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(image)
-    print(x1)
-    print(x2)
-    print(x3)
-    print(x4)
-    
-    mid = (x1 + x2 + x3 +x4)/4
-    print(mid)
-   
-    print("In Move")
-    diff = mid -200
-
-    if mid < 170:
-        linear_x = 0.2
-        angular_z = -0.2
-
-    elif mid > 230:
-        linear_x = 0.2
-        angular_z = 0.2
+    if regions['front'] < 0.5 or regions['fright'] < 0.5 or regions['fleft'] < 0.5 :
+        print("passed")
+        return
 
     else:
-        linear_x = 0.5
-        angular_z = 0.0
 
-    cv2.imshow("Image2",original_image)
-    k = cv2.waitKey(5) & 0xFF
-    return linear_x,angular_z
+        print("No pass")
+        bridge = CvBridge()
+        image = bridge.imgmsg_to_cv2(data, "bgr8")
+        print("3")
+        #cv2.imshow("Image",image)
+        #ret,thresh1 = cv2.threshold(image,127,255,cv2.THRESH_BINARY)
+        newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(image)
+        print(x1)
+        print(x2)
+        print(x3)
+        print(x4)
+    
+        mid = (x1 + x2 + x3 +x4)/4
+        print(mid)
+   
+        print("In Move")
+        diff = mid -200
+
+        if mid < 180:
+            linear_x = 0.2
+            angular_z = -0.2
+
+        elif mid > 220:
+            linear_x = 0.2
+            angular_z = 0.2
+
+        else:
+            linear_x = 0.5
+            angular_z = 0.0
+        msg = Twist()
+        #cv2.imshow("Image2",original_image)
+        #cv2.waitKey(5) & 0xFF
+        msg.linear.x = linear_x
+        msg.angular.z = angular_z
+        print('one')
+        print(linear_x)
+        pub.publish(msg)
+        return linear_x,angular_z,mid
 
 def clbk_laser(msg):
+    global regions
     regions = {
         'right':  min(min(msg.ranges[0:143]), 10),
-        'fright': min(min(msg.ranges[144:287]), 10),
-        'front':  min(min(msg.ranges[288:431]), 10),
-        'fleft':  min(min(msg.ranges[432:575]), 10),
+        'fright': min(min(msg.ranges[144:329]), 10),
+        'front':  min(min(msg.ranges[330:378]), 10),
+        'fleft':  min(min(msg.ranges[379:575]), 10),
         'left':   min(min(msg.ranges[576:719]), 10),
     }
     
     take_action(regions)
     
 def take_action(regions):
+
     msg = Twist()
     linear_x = 0
     angular_z = 0
     
     state_description = ''
     
-    if regions['front'] > 1 and regions['fleft'] > 1 and regions['fright'] > 1:
+    if regions['front'] > 0.5 and regions['fleft'] > 0.5 and regions['fright'] > 0.5:
         state_description = 'case 1 - nothing'
         rospy.Subscriber("/mybot/camera1/image_raw", Image, detect)
-    elif regions['front'] < 1 and regions['fleft'] > 1 and regions['fright'] > 1:
+
+    elif regions['front'] < 0.5 and regions['fleft'] > 0.5 and regions['fright'] > 0.5:
         state_description = 'case 2 - front'
-        linear_x = 0.3
-        angular_z = -0.3
-    elif regions['front'] > 1 and regions['fleft'] > 1 and regions['fright'] < 1:
+        linear_x = 0.1
+        angular_z = 0.3
+    elif regions['front'] > 0.5 and regions['fleft'] > 0.5 and regions['fright'] < 0.5:
         state_description = 'case 3 - fright'
-        linear_x = 0.3
+        linear_x = 0.1
         angular_z = -0.3
-    elif regions['front'] > 1 and regions['fleft'] < 1 and regions['fright'] > 1:
+    elif regions['front'] > 0.5 and regions['fleft'] < 0.5 and regions['fright'] > 0.5:
         state_description = 'case 4 - fleft'
-        linear_x = 0.3
+        linear_x = 0.1
         angular_z = 0.3
-    elif regions['front'] < 1 and regions['fleft'] > 1 and regions['fright'] < 1:
+    elif regions['front'] < 0.5 and regions['fleft'] > 0.5 and regions['fright'] < 0.5:
         state_description = 'case 5 - front and fright'
-        linear_x = 0.3
+        linear_x = 0.1
         angular_z = -0.3
-    elif regions['front'] < 1 and regions['fleft'] < 1 and regions['fright'] > 1:
+    elif regions['front'] < 0.5 and regions['fleft'] < 0.5 and regions['fright'] > 0.5:
         state_description = 'case 6 - front and fleft'
-        linear_x = 0.3
+        linear_x = 0.1
         angular_z = 0.3
-    elif regions['front'] < 1 and regions['fleft'] < 1 and regions['fright'] < 1:
+    elif regions['front'] < 0.5 and regions['fleft'] < 0.5 and regions['fright'] < 0.5:
         state_description = 'case 7 - front and fleft and fright'
-        linear_x = 0.3
-        angular_z = 0.0
-    elif regions['front'] > 1 and regions['fleft'] < 1 and regions['fright'] < 1:
+        linear_x = 0.1
+        angular_z = -0.3
+    elif regions['front'] > 0.5 and regions['fleft'] < 0.5 and regions['fright'] < 0.5:
         state_description = 'case 8 - fleft and fright'
-        linear_x = 0.3
+        linear_x = 0.1
         angular_z = 0
     else:
         state_description = 'unknown case'
         rospy.loginfo(regions)
-    print("Done")
+    print(regions)
     rospy.loginfo(state_description)
     msg.linear.x = linear_x
     msg.angular.z = angular_z
+    print('two')
+    print(msg.angular.z)
     pub.publish(msg)
+    print("published")
 
 def main():
     global pub
+
+    global msg
     
     rospy.init_node('run')
     
     pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
+
+    msg = Twist()
     
     rospy.Subscriber('/m2wr/laser/scan', LaserScan, clbk_laser)
+    
     print("Subscribed both")
     rospy.spin()
 
