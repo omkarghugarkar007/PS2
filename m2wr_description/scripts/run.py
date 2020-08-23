@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 
-import numpy as np
+import rospy
+from sensor_msgs.msg import LaserScan,Image
 import time
 from numpy import ones,vstack
 from numpy.linalg import lstsq
@@ -11,13 +12,12 @@ from matplotlib import pyplot as plt
 import cv2
 from cv_bridge import CvBridge
 import rospy
-from sensor_msgs.msg import Image
-import rospy
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point,Twist
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from math import atan2
 
+pub = None
 
 def roi(img, vertices):
     
@@ -143,10 +143,10 @@ def process_img(image):
     m2 = 0
     try:
         l1, l2, m1,m2 = draw_lanes(original_image,lines)
-	if abs(l1[2]-l2[2])<100:
-		l2[2] = 400-l1[2]
-		l2[0] = 400 -l1[0]
-		print("Chnaged")
+        if abs(l1[2]-l2[2])<100:
+            l2[2] = 400-l1[2]
+            l2[0] = 400 -l1[0]
+        print("Chnaged")
         cv2.line(original_image, (l1[0], l1[1]), (l1[2], l1[3]), [0,255,0], 10)
         cv2.line(original_image, (l2[0], l2[1]), (l2[2], l2[3]), [0,255,0], 10)
         # pixel 30width
@@ -194,29 +194,88 @@ def detect(data):
     diff = mid -200
 
     if mid < 170:
-        msg.linear.x = 0.2
-        msg.angular.z = -0.2
+        linear_x = 0.2
+        angular_z = -0.2
 
     elif mid > 230:
-        msg.linear.x = 0.2
-        msg.angular.z = 0.2
+        linear_x = 0.2
+        angular_z = 0.2
 
     else:
-        msg.linear.x = 0.5
-        msg.angular.z = 0.0
-
-    pub.publish(msg)
+        linear_x = 0.5
+        angular_z = 0.0
 
     cv2.imshow("Image2",original_image)
     k = cv2.waitKey(5) & 0xFF
 
-    r.sleep()
+def clbk_laser(msg):
+    regions = {
+        'right':  min(min(msg.ranges[0:143]), 10),
+        'fright': min(min(msg.ranges[144:287]), 10),
+        'front':  min(min(msg.ranges[288:431]), 10),
+        'fleft':  min(min(msg.ranges[432:575]), 10),
+        'left':   min(min(msg.ranges[576:719]), 10),
+    }
+    
+    take_action(regions)
+    
+def take_action(regions):
+    msg = Twist()
+    linear_x = 0
+    angular_z = 0
+    
+    state_description = ''
+    
+    if regions['front'] > 1 and regions['fleft'] > 1 and regions['fright'] > 1:
+        state_description = 'case 1 - nothing'
+        rospy.Subscriber("/mybot/camera1/image_raw", Image, detect)
+    elif regions['front'] < 1 and regions['fleft'] > 1 and regions['fright'] > 1:
+        state_description = 'case 2 - front'
+        linear_x = 0.3
+        angular_z = -0.3
+    elif regions['front'] > 1 and regions['fleft'] > 1 and regions['fright'] < 1:
+        state_description = 'case 3 - fright'
+        linear_x = 0.3
+        angular_z = -0.3
+    elif regions['front'] > 1 and regions['fleft'] < 1 and regions['fright'] > 1:
+        state_description = 'case 4 - fleft'
+        linear_x = 0.3
+        angular_z = 0.3
+    elif regions['front'] < 1 and regions['fleft'] > 1 and regions['fright'] < 1:
+        state_description = 'case 5 - front and fright'
+        linear_x = 0.3
+        angular_z = -0.3
+    elif regions['front'] < 1 and regions['fleft'] < 1 and regions['fright'] > 1:
+        state_description = 'case 6 - front and fleft'
+        linear_x = 0.3
+        angular_z = 0.3
+    elif regions['front'] < 1 and regions['fleft'] < 1 and regions['fright'] < 1:
+        state_description = 'case 7 - front and fleft and fright'
+        linear_x = 0.3
+        angular_z = 0.0
+    elif regions['front'] > 1 and regions['fleft'] < 1 and regions['fright'] < 1:
+        state_description = 'case 8 - fleft and fright'
+        linear_x = 0.3
+        angular_z = 0
+    else:
+        state_description = 'unknown case'
+        rospy.loginfo(regions)
+
+    rospy.loginfo(state_description)
+    msg.linear.x = linear_x
+    msg.angular.z = angular_z
+    pub.publish(msg)
+
+def main():
+    global pub
+    
+    rospy.init_node('run')
+    
+    pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
+    
+    rospy.Subscriber('/m2wr/laser/scan', LaserScan, clbk_laser)
+    print("Subscribed both")
+    rospy.spin()
 
 if __name__ == '__main__':
-
-    rospy.init_node('image_gazebo', anonymous=True)
-    rospy.Subscriber("/mybot/camera1/image_raw", Image, detect)
-    pub = rospy.Publisher("/cmd_vel",Twist,queue_size=1)
-    msg = Twist()
-    r = rospy.Rate(4)
-    rospy.spin()
+    main()
