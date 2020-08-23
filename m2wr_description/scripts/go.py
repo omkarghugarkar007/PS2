@@ -181,9 +181,27 @@ def detect(data):
     mid = (x1 + x2 + x3 +x4)/4
     print(mid)
    
-    print("In Move")
+    print("In Move") 
     diff = mid -200
+    if (int(m1)*int(m2)<0):
+        if mid < 180 or :
+            speed.linear.x = 0.0
+            speed.angular.z = -0.5
 
+        elif mid > 220:
+            speed.linear.x = 0.0
+            speed.angular.z = 0.5
+
+        else:
+            speed.linear.x = 0.5
+            speed.angular.z = 0.0
+    elif int(m1)>0 and int(m2)>0:
+        speed.linear.x = 0.0
+        speed.angular.z = -0.5
+    else:
+        speed.linear.x = 0.0
+        speed.angular.z = 0.5    
+    '''
     if mid < 180:
         speed.linear.x = 0.0
         speed.angular.z = -0.5
@@ -195,7 +213,7 @@ def detect(data):
     else:
         speed.linear.x = 0.5
         speed.angular.z = 0.0
-
+    '''
     pub.publish(speed)
 
     r.sleep()
