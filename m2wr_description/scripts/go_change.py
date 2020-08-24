@@ -143,10 +143,15 @@ def process_img(image):
     m2 = 0
     try:
         l1, l2, m1,m2 = draw_lanes(original_image,lines)
-	if abs(l1[2]-l2[2])<100:
-		l2[2] = 400-l1[2]
-		l2[0] = 400 -l1[0]
-		print("Chnaged")
+        '''
+        if abs(l1[2]-l2[2])<60:
+            if m1>0 and m2>0:
+                  l2[2] = 400-l1[2]
+                  l2[0] = 400 -l1[0]
+            if m2<0 and m1<0:
+                  l1[2] = 400-l2[2]
+                  l1[0] = 400 -l2[0]
+        '''
         cv2.line(original_image, (l1[0], l1[1]), (l1[2], l1[3]), [0,255,0], 10)
         cv2.line(original_image, (l2[0], l2[1]), (l2[2], l2[3]), [0,255,0], 10)
         # pixel 30width
@@ -180,8 +185,8 @@ def detect(data):
     image = bridge.imgmsg_to_cv2(data, "bgr8")
     print("3")
     #cv2.imshow("Image",image)
-    #ret,thresh1 = cv2.threshold(image,127,255,cv2.THRESH_BINARY)
-    newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(image)
+    ret,thresh1 = cv2.threshold(image,127,255,cv2.THRESH_BINARY)
+    newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(thresh1)
     print(x1)
     print(x2)
     print(x3)

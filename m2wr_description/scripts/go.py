@@ -178,29 +178,31 @@ def detect(data):
     #cv2.imshow("Image",image)
     ret,thresh1 = cv2.threshold(image,127,255,cv2.THRESH_BINARY)
     newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(thresh1)
-    mid = (x1 + x2 + x3 +x4)/4
+    mid = ( x2  +x4)/2
     print(mid)
    
     print("In Move") 
     diff = mid -200
     if (int(m1)*int(m2)<0):
-        if mid < 180 or :
+        if mid < 180 :
             speed.linear.x = 0.0
-            speed.angular.z = -0.5
+            speed.angular.z = -0.1
+            print("Less than 180 ")
 
         elif mid > 220:
             speed.linear.x = 0.0
-            speed.angular.z = 0.5
+            speed.angular.z = 0.1
 
         else:
             speed.linear.x = 0.5
             speed.angular.z = 0.0
     elif int(m1)>0 and int(m2)>0:
         speed.linear.x = 0.0
-        speed.angular.z = -0.5
-    else:
+        speed.angular.z = -0.1
+        print("Fault")
+    elif m1<0 and m2<0:
         speed.linear.x = 0.0
-        speed.angular.z = 0.5    
+        speed.angular.z = 0.1
     '''
     if mid < 180:
         speed.linear.x = 0.0
