@@ -26,14 +26,15 @@ def blue(img):
     max_index = np.argmax(areas)
     c=cnts[max_index]
     M = cv2.moments(c)
+    area = areas[max_index]
     #cv2.imshow('color',thresh) 
     try:
         cX = int(M["m10"] / M["m00"])
         cY = int(M["m01"] / M["m00"])
-        return cX-200
+        return cX-200,area
     except:
-        return 0      
-def move(px_dist):
+        return 0,area
+def move(px_dist, area):
 
     
     diff = px_dist
@@ -45,9 +46,12 @@ def move(px_dist):
         speed.linear.x = 0.0
         speed.angular.z = diff *(-0.5)
 
-    else:
+    elif area < 1500:
         speed.linear.x = 0.5
         speed.angular.z = 0.0
+    else:
+	speed.linear.x = 0.0
+	speed.angular.z = 0.0
 
     pub.publish(speed)
 
@@ -58,12 +62,12 @@ def detect(data):
     bridge = CvBridge()
     image = bridge.imgmsg_to_cv2(data, "bgr8")
     print("3")
-    px_dist = blue(image)
+    px_dist, area = blue(image)
     wide_angle = 180
     angle = (px_dist*wide_angle)/400 
     print(px_dist)
     print(angle)
-    move(px_dist)
+    move(px_dist, area)
     k = cv2.waitKey(5) & 0xFF
 
 if __name__ == '__main__':
