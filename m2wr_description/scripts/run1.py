@@ -16,6 +16,7 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point,Twist
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from math import atan2
+from lane import test_photo
 
 pub = None
 
@@ -190,8 +191,7 @@ def detect(data):
         bridge = CvBridge()
         image = bridge.imgmsg_to_cv2(data, "bgr8")
         #cv2.imshow("Image",image)
-        image = test_photo(image)
-        newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(thresh1)
+        final = test_photo(image)
         print(x1)
         print(x2)
         print(x3)

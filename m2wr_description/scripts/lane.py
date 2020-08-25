@@ -359,7 +359,7 @@ def detect(data):
         cv2.imshow("Image",image1)
         cv2.waitKey(0)
         r.sleep()
-    cv2.destroyAllWindows()
+        cv2.destroyAllWindows()
         
 
 
