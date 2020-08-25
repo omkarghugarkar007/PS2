@@ -12,7 +12,7 @@ from math import atan2
 
 # This drives the program into an infinite loop. 
 def blue(img): 
-    lower_blue = np.array([0,0,0]) 
+    lower_blue = np.array([80,0,0]) 
     upper_blue = np.array([255,40,40]) 
     img = cv2.resize(img,(400,300)) 
     mask = cv2.inRange(img, lower_blue, upper_blue) 
@@ -34,21 +34,27 @@ def blue(img):
         return cX-200,area
     except:
         return 0,area
-def move(px_dist, area):
+def move(angle, area):
 
     
-    diff = px_dist
-    if diff < -20:
-        speed.linear.x = 0.0
-        speed.angular.z = diff *(0.5)
+    diff = angle
+    if area < 1000 and area > 10:
+            
+        if diff < -15:
+            speed.linear.x = 0.5
+            speed.angular.z = 0.3
 
-    elif diff > 20:
-        speed.linear.x = 0.0
-        speed.angular.z = diff *(-0.5)
+        elif diff > 15:
+            speed.linear.x = 0.5
+            speed.angular.z = -0.3
 
-    elif area < 1500:
-        speed.linear.x = 0.5
-        speed.angular.z = 0.0
+        else:
+            speed.linear.x = 0.5
+            speed.angular.z = 0.0
+    elif area > 30000:
+        speed.linear.x = -0.3
+        speed.angular.z = 0
+
     else:
 	speed.linear.x = 0.0
 	speed.angular.z = 0.0
@@ -66,8 +72,11 @@ def detect(data):
     wide_angle = 180
     angle = (px_dist*wide_angle)/400 
     print(px_dist)
+    print(" ")
     print(angle)
-    move(px_dist, area)
+    print(" ")
+    print(area)
+    move(angle, area)
     k = cv2.waitKey(5) & 0xFF
 
 if __name__ == '__main__':
