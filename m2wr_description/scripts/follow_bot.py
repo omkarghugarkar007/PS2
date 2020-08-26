@@ -42,17 +42,17 @@ def move(angle, area):
             
         if diff < -15:
             speed.linear.x = 0.5
-            speed.angular.z = 0.3
+            speed.angular.z = 0.5
 
         elif diff > 15:
             speed.linear.x = 0.5
-            speed.angular.z = -0.3
+            speed.angular.z = -0.5
 
         else:
             speed.linear.x = 0.5
             speed.angular.z = 0.0
     elif area > 30000:
-        speed.linear.x = -0.3
+        speed.linear.x = -0.1
         speed.angular.z = 0
 
     else:
