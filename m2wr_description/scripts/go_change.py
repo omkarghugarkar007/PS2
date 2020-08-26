@@ -137,8 +137,9 @@ def process_img(image):
     processed_img = roi(processed_img, [vertices])
 
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
-    #                                     rho=1 or 25  theta   thresh  min length=40,30,*45 max gap=25,20,*30:        
-    lines = cv2.HoughLinesP(processed_img, 21, np.pi/180, 180,      50,       35)
+    #                                     rho=1 or 25  theta   thresh  min length=40,30,*45 max gap=25,20,*30:
+    # 21, ,180,50,35
+    lines = cv2.HoughLinesP(processed_img, 21, np.pi/180, 190,      10,       60)
     m1 = 0
     m2 = 0
     try:
