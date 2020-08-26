@@ -4,14 +4,15 @@
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
   name="umic_signboard">
+  <static>1</static>   
   <link
     name="umic_signboard">
     <inertial>
       <origin
-        xyz="0.10791 -0.00102259999999998 0.36206"
-        rpy="0 0 0" />
+        xyz="0 -0.15 0"
+        rpy="0 1.57 0" />
       <mass
-        value="0.12224" />
+        value="2.12224" />
       <inertia
         ixx="0.0029263"
         ixy="1.14050000000001E-05"
@@ -22,8 +23,8 @@
     </inertial>
     <visual>
       <origin
-        xyz="0 0 0"
-        rpy="1.5707963267949 0 0" />
+        xyz="0 -0.15 0"
+        rpy="0 1.57 0" />
       <geometry>
         <mesh
           filename="package://signboard/meshes/umic_signboard.STL" />
@@ -39,11 +40,12 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="1.5707963267949 0 0" />
+        rpy="0 1.57 0" />
       <geometry>
         <mesh
           filename="package://signboard/meshes/umic_signboard.STL" />
       </geometry>
     </collision>
   </link>
+  <allow_auto_disable>1</allow_auto_disable>   
 </robot>
