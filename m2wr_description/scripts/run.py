@@ -190,8 +190,8 @@ def detect(data):
         bridge = CvBridge()
         image = bridge.imgmsg_to_cv2(data, "bgr8")
         #cv2.imshow("Image",image)
-        image = test_photo(image)
-        newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(thresh1)
+       
+        newimage,original_image, m1, m2, x1,x2,x3,x4 = process_img(image)
         print(x1)
         print(x2)
         print(x3)
@@ -203,11 +203,11 @@ def detect(data):
         print("In Move")
         diff = mid -200
 
-        if mid < 180:
+        if mid < 150:
             linear_x = 0.2
             angular_z = -0.2
 
-        elif mid > 220:
+        elif mid > 250:
             linear_x = 0.2
             angular_z = 0.2
 
